@@ -45,6 +45,13 @@ public abstract class FilterComponent extends JPanel {
     myOnTheFly = onTheFlyUpdate;
     myFilter = new SearchTextFieldWithStoredHistory(propertyName) {
       @Override
+      protected boolean preprocessEventForTextField(KeyEvent e) {
+        if(FilterComponent.this.preprocessEventForTextField(e))
+          return true;
+        return super.preprocessEventForTextField(e);
+      }
+
+      @Override
       protected Runnable createItemChosenCallback(JList list) {
         final Runnable callback = super.createItemChosenCallback(list);
         return () -> {
@@ -94,6 +101,8 @@ public abstract class FilterComponent extends JPanel {
     myFilter.setHistorySize(historySize);
     add(myFilter, BorderLayout.CENTER);    
   }
+
+  protected boolean preprocessEventForTextField(KeyEvent e) { return false; }
 
   protected JComponent getPopupLocationComponent() {
     return myFilter;
